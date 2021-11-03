@@ -1,6 +1,3 @@
-from datetime import date
-
-
 def isPrime(x):
     '''
     determina daca un nr. este prim
@@ -33,14 +30,42 @@ def test_get_largest_prime_below():
 def get_age_in_days(birthday):
     '''
     Determina varsta persoanei in zile
-    :param birthday: 3 nr. intregi
-    :return: varsta in zile a unei persoane
+    :param birthday: lista ce contine data nasterii, de forma DD/MM/YYYY
+    :return: varsta in zile a unei persoane (aid)
     '''
-    today = date.today()
-    return today-birthday
+    # ziua, luna si anul nasterii
+    bd = int(birthday[0:2])
+    bm = int(birthday[3:5]) - 1
+    by = int(birthday[6:10])
+    today = "03/11/2021"
 
-#def test_get_age_in_days():
-    #assert get_age_in_days(2002,4,25))==7104
+    # ziua, luna si anul din prezent
+    td = int(today[0:2])
+    tm = int(today[3:5])
+    ty = int(today[6:10])
+    aid = 0
+    month = [31, 29, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31]
+
+    # adaugam zilele trecute din anul curent
+    aid = aid + td
+    for i in range(0, tm):
+        aid = aid + month[i]
+
+    # adaugam zilele trecute din anii trecuti
+    aid = aid + (month[bm] - bd)
+    for i in range(bm+1, 12):
+        aid = aid + month[i]
+
+    # adaugam zilele din anii ramasi
+    for i in range(by+1, ty):
+        if i % 4 == 0:
+            aid = aid + 366
+        else:
+            aid = aid + 365
+    return aid
+
+def test_get_age_in_days():
+    assert get_age_in_days("25/04/2002") == 7162
 
 
 def is_palindrome(n):
@@ -73,7 +98,7 @@ def main():
             n=int(input("Dati numarul :"))
             print(get_largest_prime_below(n))
         elif optiune == "2":
-            birthday=date(2002,4,25)
+            birthday = input("Introduceti data nasterii, in formatul DD/MM/YYYY : ")
             print(get_age_in_days(birthday))
         elif optiune=="5":
             n=int(input("Dati numarul :"))
@@ -84,7 +109,7 @@ def main():
             print("Optiune invalida")
 
 test_get_largest_prime_below()
-#test_get_age_in_days()
+test_get_age_in_days()
 test_is_palindrome()
 main()
 
